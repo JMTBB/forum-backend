@@ -23,5 +23,9 @@ class RoleRepositoryTest {
         roleRepository.save(role);
     }
 
-
+    @Test
+    @Transactional
+    public void find() {
+        System.out.println(roleRepository.getOne(3));
+    }
 }

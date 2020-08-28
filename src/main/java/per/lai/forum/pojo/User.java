@@ -21,6 +21,9 @@ public class User {
     @Column(name = "user_email")
     private String userEmail;
 
+    @Column(name = "user_password")
+    private String userPassword;
+
     @Column(name = "user_name")
     private String userName;
 
@@ -38,6 +41,9 @@ public class User {
 
     @Column(name = "user_avatar")
     private String userAvatar;
+
+    @Column(name = "user_token")
+    private String userToken;
     /*
     * Every user belong one of user types(Role)
     * */

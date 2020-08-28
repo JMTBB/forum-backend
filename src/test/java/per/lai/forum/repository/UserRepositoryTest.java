@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.unit.DataUnit;
 import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
 
@@ -35,10 +36,11 @@ class UserRepositoryTest {
     @Rollback(false)
     public void addUser() {
         User user = new User();
-        user.setUserName("Manager4Test");
-        user.setUserEmail("test@a.edu");
-        user.setUserJob("manager");
-        user.setUserExp(108);
+        user.setUserName("passwd");
+        user.setUserEmail("passwd@a.edu");
+        user.setUserJob("nurse");
+        user.setUserExp(308);
+        user.setUserPassword("abcdefg");
         user.setUserRole(roleRepository.getOne(3));
         userRepository.save(user);
     }
@@ -49,6 +51,13 @@ class UserRepositoryTest {
         User user = userRepository.findUserByUserName("Manager4Test");
         user.setUserRole(roleRepository.getOne(3));
         userRepository.save(user);
+    }
+    @Test
+    @Transactional
+    @Rollback(false)
+    public  void deleteUser() {
+        userRepository.deleteById(10);
+
     }
 
 
