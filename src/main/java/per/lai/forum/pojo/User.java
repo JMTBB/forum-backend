@@ -1,5 +1,6 @@
 package per.lai.forum.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,6 +50,7 @@ public class User {
     * */
     @ManyToOne(targetEntity = Role.class, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name = "user_role", referencedColumnName = "role_id")
+    @JsonBackReference
     private Role userRole;
     /*
     * A user can manager more than one board

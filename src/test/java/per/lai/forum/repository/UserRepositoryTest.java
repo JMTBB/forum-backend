@@ -36,10 +36,10 @@ class UserRepositoryTest {
     @Rollback(false)
     public void addUser() {
         User user = new User();
-        user.setUserName("passwd");
-        user.setUserEmail("passwd@a.edu");
-        user.setUserJob("nurse");
-        user.setUserExp(308);
+        user.setUserName("roletest");
+        user.setUserEmail("rolewd@a.edu");
+        user.setUserJob("ordi");
+        user.setUserExp(108);
         user.setUserPassword("abcdefg");
         user.setUserRole(roleRepository.getOne(3));
         userRepository.save(user);
@@ -58,6 +58,12 @@ class UserRepositoryTest {
     public  void deleteUser() {
         userRepository.deleteById(10);
 
+    }
+
+    @Test
+    @Transactional
+    public void getUser() {
+        System.out.println(userRepository.getOne(11));
     }
 
 
