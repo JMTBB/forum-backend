@@ -1,8 +1,8 @@
 package per.lai.forum.pojo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 @Data
@@ -22,11 +22,14 @@ public class Board {
     @Column(name = "board_description")
     private String boardDescription;
 
+    @Column(name = "board_access_level")
+    private Integer boardAccessLevel;
     /*
     * The manager of this board
     * */
     @ManyToOne(targetEntity = User.class, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name = "board_manager",referencedColumnName = "user_id")
+    @JsonBackReference
     private User boardManager;
 
 

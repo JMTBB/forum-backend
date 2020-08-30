@@ -1,9 +1,8 @@
 package per.lai.forum.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -52,10 +51,14 @@ public class User {
     @JoinColumn(name = "user_role", referencedColumnName = "role_id")
     @JsonBackReference
     private Role userRole;
+
     /*
     * A user can manager more than one board
     * */
     @OneToMany(mappedBy = "boardManager")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @JsonManagedReference
     private Set<Board> boards;
     /*
     * A user can create many threads
