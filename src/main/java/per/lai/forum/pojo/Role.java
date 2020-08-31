@@ -19,14 +19,8 @@ public class Role {
     private Integer roleId;
 
     @Column(name = "role_name")
-    private String roleName;
-    /*
-    * Role means user type, every user has its type.
-    * */
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "userRole")
-    @JsonManagedReference
-    private Set<User> users;
+    @Enumerated(EnumType.STRING)
+    private ERole roleName;
+
 
 }

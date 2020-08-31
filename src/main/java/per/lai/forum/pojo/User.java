@@ -45,12 +45,15 @@ public class User {
     @Column(name = "user_token")
     private String userToken;
     /*
-    * Every user belong one of user types(Role)
+    * Every user own its role(s)
     * */
-    @ManyToOne(targetEntity = Role.class, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JoinColumn(name = "user_role", referencedColumnName = "role_id")
-    @JsonBackReference
-    private Role userRole;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     /*
     * A user can manager more than one board

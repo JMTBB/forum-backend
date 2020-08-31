@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import per.lai.forum.pojo.Board;
+import per.lai.forum.pojo.ERole;
 import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
 
@@ -29,11 +30,11 @@ class BoardRepositoryTest {
         user.setUserPhone("10086");
         Role role = new Role();
         role.setRoleId(2);
-        role.setRoleName("Board manager");
+        role.setRoleName(ERole.ROLE_BOARD_MANAGER);
         Board board = new Board();
         board.setBoardName("杂谈");
         board.setBoardDescription("此板块可以讨论任何内容");
-        user.setUserRole(role);
+        user.getRoles().add(role);
         board.setBoardManager(user);
         boardRepository.save(board);
     }

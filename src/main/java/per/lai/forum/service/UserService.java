@@ -29,16 +29,14 @@ public class UserService {
         if(user1 != null) {
             if (user.getUserPassword().equals(user1.getUserPassword())){
                 //determine the user type
-                Role userRole = user1.getUserRole();
-                String returnMessage = roleRepository.getOne(userRole.getRoleId()).getRoleName() + " login";
+                String returnMessage = "success";
                 /*
                 * Status Code:
                 *   200: Ordinary User
                 *   201: Global Manager
                 *   202: Board Manager
                 * */
-                return ResultBuilder.buildResult(userRole.getRoleId() != 3
-                    ? ResultCode.SUCCESS.code + userRole.getRoleId() : ResultCode.SUCCESS.code,
+                return ResultBuilder.buildResult(ResultCode.SUCCESS,
                         returnMessage,
                         user1.getUserEmail()
                 );
@@ -60,7 +58,7 @@ public class UserService {
             System.err.println(user);
             Role role = roleRepository.getOne(3);
             System.err.println(role);
-            user.setUserRole(role);     //default user type would be ordinary user
+            //user.setUserRole(role);     //default user type would be ordinary user
             System.err.println(user);
             user.setUserExp(0); //init exp is 0.
             User save = userRepository.save(user);

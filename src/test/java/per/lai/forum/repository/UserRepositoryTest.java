@@ -6,8 +6,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataUnit;
+import per.lai.forum.pojo.ERole;
 import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
@@ -25,8 +29,8 @@ class UserRepositoryTest {
         user.setUserExp(101);
         Role role = new Role();
         role.setRoleId(1);
-        role.setRoleName("global manager");
-        user.setUserRole(role);
+        role.setRoleName(ERole.ROLE_GLOBAL_MANAGER);
+        user.getRoles().add(role);
         userRepository.save(user);
     }
     @Autowired
@@ -41,16 +45,21 @@ class UserRepositoryTest {
         user.setUserJob("ordi");
         user.setUserExp(108);
         user.setUserPassword("abcdefg");
-        user.setUserRole(roleRepository.getOne(3));
         userRepository.save(user);
     }
     @Test
     @Transactional
     @Rollback(false)
     public void updateUser() {
-        User user = userRepository.findUserByUserName("Manager4Test");
-        user.setUserRole(roleRepository.getOne(3));
-        userRepository.save(user);
+        for (int j = 9; j <=16 ; j++) {
+            User user = userRepository.getOne(j);
+            Set<Role> roles = new HashSet<>();
+            for (int i = 1; i <= 1; i++) {
+                roles.add(roleRepository.getOne(i));
+            }
+            user.setRoles(roles);
+            userRepository.save(user);
+        }
     }
     @Test
     @Transactional
