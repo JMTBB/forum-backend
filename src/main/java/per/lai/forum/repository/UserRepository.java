@@ -10,6 +10,8 @@ public interface UserRepository extends JpaRepository<User, Integer> , JpaSpecif
 
     public User findUserByUserEmail(String userEmail);
 
+    public User findUserByUserNameOrUserEmail(String userName,String userEmail);
+
     public boolean existsByUserEmail(String userEmail);
 
     public boolean existsByUserName(String userName);

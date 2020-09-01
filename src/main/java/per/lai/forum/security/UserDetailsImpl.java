@@ -16,6 +16,14 @@ public class UserDetailsImpl implements UserDetails{
     private String userPassword;
     private Collection<? extends GrantedAuthority> authorities;
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

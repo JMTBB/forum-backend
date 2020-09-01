@@ -24,7 +24,7 @@ public class UserController {
     public Result userLogin(@RequestBody Map<String, String> payload) {
         if (StringUtils.isEmpty(payload.get("userEmail")) ||
                 StringUtils.isEmpty(payload.get("userPassword"))) { //recheck the integrity of data
-            return ResultBuilder.buildFailResult("data incomplete!");
+            return ResultBuilder.buildFailResult("Email or Password empty");
         }else {
             User user = new User();
             user.setUserEmail(payload.get("userEmail"));

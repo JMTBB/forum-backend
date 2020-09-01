@@ -2,6 +2,7 @@ package per.lai.forum.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -9,8 +10,10 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-    private String jwtSecret;
 
+    @Value("${macro.app.jwtSecret}")
+    private String jwtSecret;
+    @Value("${macro.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
@@ -19,7 +22,7 @@ public class JwtUtils {
                 .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.ES512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
     public String getUserNameFromJwtToken(String token) {

@@ -13,4 +13,8 @@ spring:
         format_sql: true
 
 
-
+#Jwt properties
+macro:
+    app:
+      jwtSecret: macrosSecret
+      jwtExpirationMs: 86400000   #24h
