@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import per.lai.forum.handler.AuthEntryUnauthorized;
 
 @Configuration
 @EnableWebSecurity
@@ -24,6 +25,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
+
+
+    private AuthEntryUnauthorized authEntryUnauthorized;
+
+    @Autowired
+    public void setAuthEntryUnauthorized(AuthEntryUnauthorized authEntryUnauthorized) {
+        this.authEntryUnauthorized = authEntryUnauthorized;
+    }
+
     @Autowired
     private AuthTokenFilter authTokenFilter() {
         return new AuthTokenFilter();
@@ -32,6 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(authEntryUnauthorized)
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()

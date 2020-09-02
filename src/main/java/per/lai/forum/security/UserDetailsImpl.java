@@ -3,12 +3,13 @@ package per.lai.forum.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import per.lai.forum.pojo.User;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 public class UserDetailsImpl implements UserDetails{
     private int userId;
     private String userName;

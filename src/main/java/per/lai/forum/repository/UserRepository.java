@@ -6,14 +6,15 @@ import org.springframework.stereotype.Repository;
 import per.lai.forum.pojo.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> , JpaSpecificationExecutor<User> {
-    public User findUserByUserName(String userName);
+    User findUserByUserName(String userName);
 
-    public User findUserByUserEmail(String userEmail);
+    User findUserByUserEmail(String userEmail);
 
-    public User findUserByUserNameOrUserEmail(String userName,String userEmail);
+    User findUserByUserNameOrUserEmail(String userName,String userEmail);
 
-    public boolean existsByUserEmail(String userEmail);
+   boolean existsByUserEmail(String userEmail);
 
-    public boolean existsByUserName(String userName);
+    boolean existsByUserName(String userName);
+
 
 }

@@ -8,17 +8,22 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
 import per.lai.forum.repository.RoleRepository;
 import per.lai.forum.repository.UserRepository;
 import per.lai.forum.result.Result;
 import per.lai.forum.result.ResultBuilder;
-import per.lai.forum.result.ResultCode;
 import per.lai.forum.result.payload.response.JwtResponse;
-import per.lai.forum.security.JwtUtils;
+import per.lai.forum.utils.AvatarUtil;
+import per.lai.forum.utils.JwtUtils;
 import per.lai.forum.security.UserDetailsImpl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,7 +33,6 @@ public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private AuthenticationManager authenticationManager;
-    private JwtUtils jwtUtils;
     private PasswordEncoder passwordEncoder;
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -42,10 +46,7 @@ public class UserService {
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
-    @Autowired
-    public void setJwtUtils(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-    }
+
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -56,7 +57,7 @@ public class UserService {
                 new UsernamePasswordAuthenticationToken(user.getUserName() == null ? user.getUserEmail() : user.getUserName(), user.getUserPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        String jwt = JwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -77,12 +78,34 @@ public class UserService {
             return ResultBuilder.buildFailResult("User already exist");
 
 
-        user.setRoles(new HashSet<Role>() {{add(roleRepository.getOne(3));}});     //default user type would be ordinary user
+        user.setRoles(new HashSet<>() {{add(roleRepository.getOne(3));}});     //default user type would be ordinary user
         user.setUserExp(0);             //init exp is 0.
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));           //Encode the password
         User save = userRepository.save(user);
         System.err.println(save);
         return ResultBuilder.buildSuccessResult(save.getUserName() + " " + save.getUserEmail());
 
+    }
+
+
+    public Result setUserAvatar(MultipartFile file, Integer id) {
+        String originalName = file.getOriginalFilename();
+        if (originalName == null) {
+            return ResultBuilder.buildFailResult("Something wrong with filename");
+        }
+        if (id != AvatarUtil.getCurrentAuthenticatedUserId()){
+            return ResultBuilder.buildFailResult("Access deny");
+        }
+        String UUIDName = AvatarUtil.getUUIDName(originalName);
+        try {
+            Files.copy(file.getInputStream(), AvatarUtil.path().resolve(UUIDName));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResultBuilder.buildFailResult("Save file failed, please retry");
+        }
+        User user = userRepository.getOne(id);
+        user.setUserAvatar(UUIDName);
+        userRepository.save(user);
+        return ResultBuilder.buildSuccessResult("Updated avatar");
     }
 }

@@ -61,7 +61,7 @@ class BoardRepositoryTest {
     @Transactional
     @Rollback(false)
     public void addBoard() {
-        Board board = new Board(null, "Test Board", "This is the board for unit test",0, userRepository.getOne(7));
+        Board board = new Board(null, "业务", "讨论业务问题",0, userRepository.getOne(7));
         boardRepository.save(board);
     }
 }
