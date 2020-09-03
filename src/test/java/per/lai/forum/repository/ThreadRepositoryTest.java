@@ -34,4 +34,10 @@ class ThreadRepositoryTest {
         threadRepository.save(thread);
 
     }
+
+    @Test
+    @Transactional
+    public void getById() {
+        System.out.println(threadRepository.getOne(3));
+    }
 }

@@ -1,6 +1,8 @@
 package per.lai.forum.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -20,7 +22,8 @@ public class User {
 
     @Column(name = "user_email")
     private String userEmail;
-
+    @JsonIgnore
+    @ToString.Exclude
     @Column(name = "user_password")
     private String userPassword;
 
@@ -47,14 +50,18 @@ public class User {
     /*
     * Every user own its role(s)
     * */
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(targetEntity = Role.class,fetch = FetchType.EAGER)
-    @JsonBackReference
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @JsonIgnore
+    @ToString.Exclude
     private Set<Role> roles;
+
+
 
     /*
     * A user can manager more than one board

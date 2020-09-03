@@ -50,8 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/login","/board").permitAll()
-                .antMatchers(HttpMethod.POST,"/user").permitAll()
+                .antMatchers("/login","/register","/board").permitAll()
+                .antMatchers("/thread","/thread/*").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

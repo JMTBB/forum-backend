@@ -44,7 +44,7 @@ public class UserController {
     * user sign up
     * */
     @PreAuthorize("permitAll()")
-    @PostMapping("/user")
+    @PostMapping("/register")
     public Result userRegister(@RequestBody Map<String, String> payload) {
 
         if (StringUtils.isEmpty(payload.get("userEmail")) ||
