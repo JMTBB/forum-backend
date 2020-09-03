@@ -2,6 +2,7 @@ package per.lai.forum.controlller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,11 @@ public class UserController {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
+    /*
+    * User sign in
+    * */
+    @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public Result userLogin(@RequestBody Map<String, String> payload) {
         if (StringUtils.isEmpty(payload.get("userEmail")) ||
@@ -34,7 +40,10 @@ public class UserController {
             return userService.login(user);
         }
     }
-
+    /*
+    * user sign up
+    * */
+    @PreAuthorize("permitAll()")
     @PostMapping("/user")
     public Result userRegister(@RequestBody Map<String, String> payload) {
 
@@ -51,6 +60,10 @@ public class UserController {
         }
 
     }
+
+    /*
+    * update user's avatar
+    * */
     @PostMapping("/upload/avatar")
     public Result updateAvatar(@RequestParam("file")MultipartFile file, @RequestParam("id") Integer id) {
         if (file == null || id == null){

@@ -10,6 +10,8 @@ import per.lai.forum.pojo.ERole;
 import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -61,7 +63,17 @@ class BoardRepositoryTest {
     @Transactional
     @Rollback(false)
     public void addBoard() {
-        Board board = new Board(null, "业务", "讨论业务问题",0, userRepository.getOne(7));
+        Board board = new Board(null, "二手交易", "仅提供发帖，请在平台交易",3, userRepository.getOne(7));
         boardRepository.save(board);
     }
+
+    @Test
+    @Transactional
+    public void findByLevel() {
+        List<Board> boardList = boardRepository.findBoardsByBoardAccessLevelIsLessThanEqual(1);
+        for (Board board : boardList) {
+            System.out.println(board);
+        }
+    }
+
 }

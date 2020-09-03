@@ -34,4 +34,12 @@ public class AvatarUtil {
             return -1;
     }
 
+    public static UserDetailsImpl getCurrentUserDetail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)){
+            return (UserDetailsImpl) authentication.getPrincipal();
+        }else
+            return null;
+    }
+
 }

@@ -17,6 +17,9 @@ public class UserDetailsImpl implements UserDetails{
     private String userPassword;
     private Collection<? extends GrantedAuthority> authorities;
 
+    private int exp;
+    private int level;
+
     public int getUserId() {
         return userId;
     }
@@ -33,13 +36,16 @@ public class UserDetailsImpl implements UserDetails{
     public UserDetailsImpl() {
     }
 
-    public UserDetailsImpl(int userId, String userName, String userEmail, String userPassword, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(int userId, String userName, String userEmail, String userPassword, Collection<? extends GrantedAuthority> authorities, int exp) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
         this.authorities = authorities;
+        this.exp = exp;
+        this.level = expToLevel(exp);
     }
+
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getRoleName().name()))
@@ -49,9 +55,28 @@ public class UserDetailsImpl implements UserDetails{
                 user.getUserName(),
                 user.getUserEmail(),
                 user.getUserPassword(),
-                authorities
-        );
+                authorities,
+                user.getUserExp()
+                );
     }
+
+    /*
+    * User would level 1 while register
+    * */
+    private int expToLevel(int exp) {
+        return exp/100+1;
+    }
+
+    public int getExp() {
+        return exp;
+    }
+
+
+    public int getLevel() {
+        return level;
+    }
+
+
 
     @Override
     public String getPassword() {

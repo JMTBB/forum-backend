@@ -1,5 +1,7 @@
 package per.lai.forum.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,6 +43,7 @@ public class Thread {
     * */
     @ManyToOne(targetEntity = User.class,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name = "thread_owner", referencedColumnName = "user_id")
+    @JsonManagedReference
     private User threadOwner;
 
     /*
@@ -48,12 +51,14 @@ public class Thread {
     * */
     @ManyToOne(targetEntity = Board.class, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "thread_board", referencedColumnName = "board_id")
+    @JsonManagedReference
     private Board threadBoard;
 
 
     /*
     * A thread contains many comments.
     * */
-    @OneToMany(mappedBy = "commentThread")
-    private Set<Comment> comments;
+//    @OneToMany(mappedBy = "commentThread")
+//    @JsonBackReference
+//    private Set<Comment> comments;
 }

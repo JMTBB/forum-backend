@@ -48,6 +48,7 @@ public class User {
     * Every user own its role(s)
     * */
     @ManyToMany(targetEntity = Role.class,fetch = FetchType.EAGER)
+    @JsonBackReference
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -58,22 +59,24 @@ public class User {
     /*
     * A user can manager more than one board
     * */
-    @OneToMany(mappedBy = "boardManager")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @JsonManagedReference
-    private Set<Board> boards;
-    /*
-    * A user can create many threads
-    * */
-    @OneToMany(mappedBy = "threadOwner")
-    private Set<Thread> threads;
-
-    /*
-    * User owns many comments.
-    * */
-    @OneToMany(mappedBy = "commentUser")
-    private Set<Comment> comments;
+//    @OneToMany(mappedBy = "boardManager")
+//    @ToString.Exclude
+//    @EqualsAndHashCode.Exclude
+//    @JsonBackReference
+//    private Set<Board> boards;
+//    /*
+//    * A user can create many threads
+//    * */
+//    @OneToMany(mappedBy = "threadOwner")
+//    @JsonBackReference
+//    private Set<Thread> threads;
+//
+//    /*
+//    * User owns many comments.
+//    * */
+//    @OneToMany(mappedBy = "commentUser")
+//    @JsonBackReference
+//    private Set<Comment> comments;
 
 
 
