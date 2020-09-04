@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Integer>, JpaSpecificationExecutor<Board> {
     List<Board> findBoardsByBoardAccessLevelIsLessThanEqual(Integer level);
+    boolean existsByBoardId(int id);
 }

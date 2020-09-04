@@ -29,4 +29,10 @@ public class ThreadController {
     public Result getThreadById(@PathVariable int id) {
         return threadService.getThreadById(id);
     }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/threads/{boardId}")
+    public Result getThreadsByBoardId(@PathVariable int boardId) {
+        return threadService.getByBoardId(boardId);
+    }
 }

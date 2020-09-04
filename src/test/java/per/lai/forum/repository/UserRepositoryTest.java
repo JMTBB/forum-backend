@@ -9,8 +9,10 @@ import org.springframework.util.unit.DataUnit;
 import per.lai.forum.pojo.ERole;
 import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
+import per.lai.forum.utils.AvatarUtil;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,6 +77,19 @@ class UserRepositoryTest {
         System.out.println(userRepository.getOne(11));
     }
 
-
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void initAvatar() {
+        List<User> all = userRepository.findAll();
+        for (User user : all) {
+            String uuid = AvatarUtil.getUUID();
+            System.out.println(user.getUserEmail());
+            if (AvatarUtil.InitUserAvatar(uuid, user.getUserEmail())) {
+                user.setUserAvatar(uuid + ".png");
+            }
+            userRepository.save(user);
+        }
+    }
 
 }

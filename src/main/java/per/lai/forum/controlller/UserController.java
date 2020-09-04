@@ -11,6 +11,7 @@ import per.lai.forum.result.Result;
 import per.lai.forum.result.ResultBuilder;
 import per.lai.forum.service.UserService;
 
+import javax.annotation.security.PermitAll;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -71,7 +72,11 @@ public class UserController {
         }else
             return userService.setUserAvatar(file,id);
     }
-
+    @PreAuthorize("permitAll()")
+    @GetMapping("/avatar/{id}")
+    public Result getAvatar(@PathVariable int id) {
+        return userService.getAvatar(id);
+    }
 
 
 }

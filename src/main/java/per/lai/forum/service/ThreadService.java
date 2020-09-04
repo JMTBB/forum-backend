@@ -68,4 +68,20 @@ public class ThreadService {
         }
         return ResultBuilder.buildSuccessResult(thread);
     }
+
+    public Result getByBoardId(int boardId) {
+        Board board = null;
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        if(optionalBoard.isPresent())
+            board = optionalBoard.get();
+        else
+            return ResultBuilder.buildFailResult("board doesn't exist");
+        /*
+         * Check the level
+         * */
+        int level = (AvatarUtil.getCurrentUserDetail() != null) ? AvatarUtil.getCurrentUserDetail().getLevel() : 0;
+        if (level < board.getBoardAccessLevel())
+            return ResultBuilder.buildResult(403, "access deny", null);
+        return ResultBuilder.buildSuccessResult(threadRepository.findThreadsByThreadBoard(board));
+    }
 }

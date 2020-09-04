@@ -29,7 +29,6 @@ public class Board {
     * */
     @ManyToOne(targetEntity = User.class, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name = "board_manager",referencedColumnName = "user_id")
-    @JsonManagedReference
     private User boardManager;
 
 

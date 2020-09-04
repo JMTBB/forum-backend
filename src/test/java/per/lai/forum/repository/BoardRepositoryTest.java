@@ -76,4 +76,10 @@ class BoardRepositoryTest {
         }
     }
 
+    @Test
+    @Transactional
+    public void findById() {
+        System.out.println(boardRepository.getOne(2));
+    }
+
 }

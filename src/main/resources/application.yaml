@@ -12,6 +12,10 @@ spring:
       hibernate:
         format_sql: true
 
+  resources:
+    static-locations: file:D:/JAVA_code/Temp/avatar/
+  mvc:
+    static-path-pattern: /images/**
 
 #Jwt properties
 macro:
