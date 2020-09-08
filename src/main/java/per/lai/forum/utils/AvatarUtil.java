@@ -4,7 +4,11 @@ package per.lai.forum.utils;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import per.lai.forum.pojo.ERole;
+import per.lai.forum.pojo.Thread;
 import per.lai.forum.security.UserDetailsImpl;
 
 import javax.xml.bind.DatatypeConverter;
@@ -17,6 +21,7 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.UUID;
 
 public class AvatarUtil {
@@ -81,6 +86,22 @@ public class AvatarUtil {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static boolean isAdmin() {
+        UserDetailsImpl userDetail = getCurrentUserDetail();
+        SimpleGrantedAuthority boardManager = new SimpleGrantedAuthority(ERole.ROLE_BOARD_MANAGER.name());
+        SimpleGrantedAuthority globalManager = new SimpleGrantedAuthority(ERole.ROLE_GLOBAL_MANAGER.name());
+        if (userDetail == null)
+            return  false;
+        else {
+            Collection<? extends GrantedAuthority> authorities = userDetail.getAuthorities();
+            return authorities.contains(boardManager) || authorities.contains(globalManager);
+        }
+    }
+    public static boolean checkLevel(Thread thread) {
+        int level = (AvatarUtil.getCurrentUserDetail() != null) ? AvatarUtil.getCurrentUserDetail().getLevel() : 0;
+        return level >= thread.getThreadBoard().getBoardAccessLevel();
     }
 
 }

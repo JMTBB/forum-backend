@@ -8,6 +8,8 @@ import per.lai.forum.result.Result;
 import per.lai.forum.result.ResultBuilder;
 import per.lai.forum.service.ThreadService;
 
+import java.util.Map;
+
 
 @RestController
 public class ThreadController {
@@ -31,8 +33,32 @@ public class ThreadController {
     }
 
     @PreAuthorize("permitAll()")
-    @GetMapping("/threads/{boardId}")
-    public Result getThreadsByBoardId(@PathVariable int boardId) {
-        return threadService.getByBoardId(boardId);
+    @GetMapping("/threads/{boardId}/{pageNumber}")
+    public Result getThreadsByBoardId(@PathVariable int boardId, @PathVariable int pageNumber) {
+        return threadService.getByBoardId(boardId, pageNumber);
+    }
+
+    /*
+    * Get all user's threads
+    * */
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/threadinfo/{userId}/{pageNumber}")
+    public Result getThreadOfUser(@PathVariable Integer userId, @PathVariable Integer pageNumber){
+        return threadService.getUserThread(userId, pageNumber);
+    }
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/thread/{id}")
+    public Result updateThread(@PathVariable Integer id, @RequestBody Map<String, String> payload){
+        return threadService.updateThread(payload, id);
+    }
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/thread/{id}")
+    public Result deleteThread(@PathVariable Integer id){
+        return threadService.deleteByThreadId(id);
+    }
+    @PreAuthorize("hasRole('GLOBAL_MANAGER') or hasRole('BOARD_MANAGER')")
+    @PutMapping("/thread/top/{id}")
+    public Result setTop(@PathVariable Integer id){
+        return threadService.setTop(id);
     }
 }

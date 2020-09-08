@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
@@ -124,5 +125,60 @@ public class UserService {
             return ResultBuilder.buildSuccessResult(avatar);
         }else
             return ResultBuilder.buildFailResult("error");
+    }
+
+    public Result getInfo(int id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null)
+            return ResultBuilder.buildFailResult("user doesn't exist");
+        return ResultBuilder.buildSuccessResult(user);
+    }
+    public Result updateInfo(int id, Map<String, String> payload) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null)
+            return ResultBuilder.buildFailResult("user doesn't exist");
+        if (StringUtils.hasText(payload.get("userPhone")))
+            user.setUserPhone(payload.get("userPhone"));
+        if (StringUtils.hasText(payload.get("userJob")))
+            user.setUserJob(payload.get("userJob"));
+        if (StringUtils.hasText(payload.get("userAddress")))
+            user.setUserAddress(payload.get("userAddress"));
+        userRepository.save(user);
+        return ResultBuilder.buildSuccessResult(user.getUserId());
+    }
+
+    public Result getAll() {
+        List<User> all = userRepository.findAll();
+        return ResultBuilder.buildSuccessResult(all);
+    }
+
+    public boolean setManager(int id, boolean global) {
+        User user = userRepository.findById(id).orElse(null);
+        if(user ==null)
+            return false;
+        user.getRoles().add(roleRepository.getOne(2));
+        if (global)
+            user.getRoles().add(roleRepository.getOne(1));
+        userRepository.save(user);
+        return true;
+    }
+
+    public boolean removeManager(int id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null)
+            return  false;
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.getOne(3));
+        user.setRoles(roles);
+        userRepository.save(user);
+        return true;
+    }
+
+
+    public Result getUserExp(int id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null)
+            return ResultBuilder.buildFailResult("don't exist");
+        return ResultBuilder.buildSuccessResult(user.getUserExp());
     }
 }

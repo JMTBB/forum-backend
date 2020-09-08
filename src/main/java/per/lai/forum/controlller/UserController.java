@@ -1,5 +1,6 @@
 package per.lai.forum.controlller;
 
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,5 +79,27 @@ public class UserController {
         return userService.getAvatar(id);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/{id}")
+    public Result getUserInfo(@PathVariable Integer id) {
+        return userService.getInfo(id);
+    }
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/user/{id}")
+    public Result updateUserInfo(@PathVariable Integer id, @RequestBody Map<String, String> payload) {
+        return userService.updateInfo(id, payload);
+    }
 
+    
+    @PreAuthorize("hasRole('GLOBAL_MANAGER')")
+    @GetMapping("/user")
+    public Result getAllUser(){
+        return userService.getAll();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/exp/{id}")
+    public Result getExp(@PathVariable Integer id) {
+        return userService.getUserExp(id);
+    }
 }

@@ -3,12 +3,14 @@ package per.lai.forum.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataUnit;
 import per.lai.forum.pojo.ERole;
 import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
+import per.lai.forum.service.UserService;
 import per.lai.forum.utils.AvatarUtil;
 
 import java.util.HashSet;
@@ -20,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
     @Test
     @Transactional
     @Rollback(false)
@@ -53,14 +57,9 @@ class UserRepositoryTest {
     @Transactional
     @Rollback(false)
     public void updateUser() {
-        for (int j = 9; j <=16 ; j++) {
-            User user = userRepository.getOne(j);
-            Set<Role> roles = new HashSet<>();
-            for (int i = 1; i <= 1; i++) {
-                roles.add(roleRepository.getOne(i));
-            }
-            user.setRoles(roles);
-            userRepository.save(user);
+        for (int j = 5; j <=26; j++) {
+
+            System.out.println(userService.removeManager(j));
         }
     }
     @Test
@@ -90,6 +89,17 @@ class UserRepositoryTest {
             }
             userRepository.save(user);
         }
+    }
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void setPassword() {
+        User user = userRepository.getOne(29);
+        userService.setManager(29,false);
+        user.setUserPassword(passwordEncoder.encode("123456"));
+        userRepository.save(user);
     }
 
 }

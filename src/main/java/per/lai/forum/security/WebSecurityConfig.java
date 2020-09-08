@@ -52,7 +52,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login","/register","/board").permitAll()
                 .antMatchers("/avatar/**").permitAll()
-                .antMatchers("/thread","/thread/**").permitAll()
+                .antMatchers("/user/exp/**","/user/**").permitAll()
+                .antMatchers("/thread","/thread/**","/threads/**/**","/threadinfo/**/**").permitAll()
+                .antMatchers("/comment","/comments/**","/comments/user/**","/comment/counter/**","/comment/**").permitAll()
+                .antMatchers("/board/count/**","/board/admin/**","/board/**").permitAll()
                 .antMatchers("/images/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);

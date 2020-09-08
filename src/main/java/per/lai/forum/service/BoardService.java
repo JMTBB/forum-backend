@@ -3,6 +3,9 @@ package per.lai.forum.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import per.lai.forum.pojo.Board;
+import per.lai.forum.pojo.User;
+import per.lai.forum.pojo.dto.ReceivedBoard;
 import per.lai.forum.repository.BoardRepository;
 import per.lai.forum.repository.UserRepository;
 import per.lai.forum.result.Result;
@@ -23,9 +26,18 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
+    private UserRepository userRepository;
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public Result getBoardListByLevel(int userId) {
         int level = 1;
 
+        if (AvatarUtil.isAdmin())
+            return ResultBuilder.buildSuccessResult(boardRepository.findAll());
         /*
         * User id equals 0 if user didn't login
         * */
@@ -44,5 +56,27 @@ public class BoardService {
 
     public Result getAllBoard() {
         return ResultBuilder.buildSuccessResult(boardRepository.findAll());
+    }
+
+    public Result getBoardSeq(int id) {
+        return ResultBuilder.buildSuccessResult(boardRepository.countBoardsByBoardIdLessThan(id));
+    }
+
+    public Result getByManager(int id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user==null)
+            return ResultBuilder.buildFailResult("user don't exist");
+        return ResultBuilder.buildSuccessResult(boardRepository.findBoardsByBoardManager(user));
+    }
+
+    public Result update(Board receivedBoard) {
+        Board board = boardRepository.findById(receivedBoard.getBoardId()).orElse(null);
+        if(board == null)
+            return ResultBuilder.buildFailResult("don't exist");
+        board.setBoardName(receivedBoard.getBoardName());
+        board.setBoardDescription(receivedBoard.getBoardDescription());
+        board.setBoardAccessLevel(receivedBoard.getBoardAccessLevel());
+        boardRepository.save(board);
+        return ResultBuilder.buildSuccessResult(board.getBoardId());
     }
 }
