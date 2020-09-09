@@ -1,6 +1,8 @@
 package per.lai.forum.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
+import per.lai.forum.pojo.dto.ReceivedUser;
 import per.lai.forum.repository.RoleRepository;
 import per.lai.forum.repository.UserRepository;
 import per.lai.forum.result.Result;
@@ -180,5 +183,20 @@ public class UserService {
         if (user == null)
             return ResultBuilder.buildFailResult("don't exist");
         return ResultBuilder.buildSuccessResult(user.getUserExp());
+    }
+
+    public Result getUsersWithPageNumber(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, 10);
+        return ResultBuilder.buildSuccessResult(userRepository.findAll(pageable));
+    }
+
+    public Result updateUserByAdmin(ReceivedUser receivedUser) {
+        User user = userRepository.getOne(receivedUser.getId());
+        user.setUserName(receivedUser.getName());
+        user.setUserAddress(receivedUser.getAddress());
+        user.setUserJob(receivedUser.getJob());
+        user.setUserPhone(receivedUser.getPhone());
+        userRepository.save(user);
+        return ResultBuilder.buildSuccessResult(user.getUserId());
     }
 }

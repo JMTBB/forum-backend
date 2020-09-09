@@ -49,7 +49,14 @@ public class BoardController {
     @PreAuthorize("hasRole('BOARD_MANAGER')")
     @PutMapping("/board")
     public Result updateBoard(@RequestBody Board board) {
-
         return boardService.update(board);
+    }
+    @PreAuthorize("hasRole('GLOBAL_MANAGER')")
+    @PostMapping("/board")
+    public Result addBoard(@RequestBody ReceivedBoard board) {
+        if (!board.checkIntegrity()) {
+            return ResultBuilder.buildFailResult("data incomplete");
+        }
+        return boardService.addBoard(board);
     }
 }

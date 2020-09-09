@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import per.lai.forum.pojo.Board;
+import per.lai.forum.pojo.Role;
 import per.lai.forum.pojo.User;
 import per.lai.forum.pojo.dto.ReceivedBoard;
 import per.lai.forum.repository.BoardRepository;
+import per.lai.forum.repository.RoleRepository;
 import per.lai.forum.repository.UserRepository;
 import per.lai.forum.result.Result;
 import per.lai.forum.result.ResultBuilder;
@@ -31,6 +33,13 @@ public class BoardService {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    private RoleRepository roleRepository;
+
+    @Autowired
+    public void setRoleRepository(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     public Result getBoardListByLevel(int userId) {
@@ -78,5 +87,17 @@ public class BoardService {
         board.setBoardAccessLevel(receivedBoard.getBoardAccessLevel());
         boardRepository.save(board);
         return ResultBuilder.buildSuccessResult(board.getBoardId());
+    }
+
+    public Result addBoard(ReceivedBoard receivedBoard) {
+        User user = userRepository.findById(receivedBoard.getOwner()).orElse(null);
+        if (user == null)
+            return ResultBuilder.buildFailResult("user don't exist");
+        Role role = roleRepository.getOne(2);
+        user.getRoles().add(role);
+        Board board = new Board(null, receivedBoard.getName(), receivedBoard.getDescription(), receivedBoard.getLevel(), user);
+        Board save = boardRepository.save(board);
+        return ResultBuilder.buildSuccessResult(save.getBoardId());
+
     }
 }

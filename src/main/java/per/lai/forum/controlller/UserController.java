@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import per.lai.forum.pojo.User;
+import per.lai.forum.pojo.dto.ReceivedUser;
 import per.lai.forum.result.Result;
 import per.lai.forum.result.ResultBuilder;
 import per.lai.forum.service.UserService;
@@ -92,9 +93,19 @@ public class UserController {
 
     
     @PreAuthorize("hasRole('GLOBAL_MANAGER')")
+    @GetMapping("/users/{pageNumber}")
+    public Result getAllUserWithPage(@PathVariable Integer pageNumber){
+        return userService.getUsersWithPageNumber(pageNumber);
+    }
+    @PreAuthorize("hasRole('GLOBAL_MANAGER')")
     @GetMapping("/user")
-    public Result getAllUser(){
+    public Result getAllUser() {
         return userService.getAll();
+    }
+    @PreAuthorize("hasRole('GLOBAL_MANAGER')")
+    @PutMapping("/user")
+    public Result updateUserByAdmin(@RequestBody ReceivedUser receivedUser) {
+        return userService.updateUserByAdmin(receivedUser);
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -102,4 +113,6 @@ public class UserController {
     public Result getExp(@PathVariable Integer id) {
         return userService.getUserExp(id);
     }
+
+
 }
