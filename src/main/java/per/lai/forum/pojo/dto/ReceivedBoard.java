@@ -12,9 +12,9 @@ public class ReceivedBoard {
     private String name;
     private String description;
     private int level;
-    private int owner;
+    private int manager;
 
     public boolean checkIntegrity() {
-        return owner != 0 && !StringUtils.isEmpty(name);
+        return manager != 0 && !StringUtils.isEmpty(name);
     }
 }

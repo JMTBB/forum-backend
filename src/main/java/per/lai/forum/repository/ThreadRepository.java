@@ -14,6 +14,7 @@ public interface ThreadRepository extends JpaRepository<Thread, Integer>, JpaSpe
     boolean existsByThreadId(int id);
 
     Page<Thread> findThreadsByThreadBoard(Board board, Pageable pageable);
+    List<Thread> findThreadsByThreadBoard(Board board);
 
     Page<Thread> findThreadsByThreadOwner(User user, Pageable pageable);
 

@@ -99,6 +99,15 @@ public class AvatarUtil {
             return authorities.contains(boardManager) || authorities.contains(globalManager);
         }
     }
+    public static boolean isGlobalManager() {
+        UserDetailsImpl userDetail = getCurrentUserDetail();
+        SimpleGrantedAuthority globalManager = new SimpleGrantedAuthority(ERole.ROLE_GLOBAL_MANAGER.name());
+        if (userDetail == null)
+            return  false;
+        else {
+            return userDetail.getAuthorities().contains(globalManager);
+        }
+    }
     public static boolean checkLevel(Thread thread) {
         int level = (AvatarUtil.getCurrentUserDetail() != null) ? AvatarUtil.getCurrentUserDetail().getLevel() : 0;
         return level >= thread.getThreadBoard().getBoardAccessLevel();

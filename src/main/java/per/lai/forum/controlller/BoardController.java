@@ -59,4 +59,9 @@ public class BoardController {
         }
         return boardService.addBoard(board);
     }
+    @PreAuthorize("hasRole('GLOBAL_MANAGER')")
+    @DeleteMapping("/board/{id}")
+    public Result deleteBoardById(@PathVariable Integer id) {
+        return boardService.deleteBoard(id);
+    }
 }
